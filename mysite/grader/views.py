@@ -37,7 +37,7 @@ def question(request, question_id):
 
             if len(content) > 20:
                 num_features = 300
-                model = word2vec.KeyedVectors.load_word2vec_format(os.path.join(current_path, "deep_learning_files/word2vec.bin"), binary=True)
+                model = word2vec.KeyedVectors.load_word2vec_format(os.path.join(current_path, "deep_learning_files/word2vecmodel.bin"), binary=True)
                 clean_test_essays = []
                 clean_test_essays.append(essay_to_wordlist( content, remove_stopwords=True ))
                 testDataVecs = getAvgFeatureVecs( clean_test_essays, model, num_features )
