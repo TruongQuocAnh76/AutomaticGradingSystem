@@ -1,3 +1,5 @@
 # ignore .bin and .model files
 *.bin
 *.model
+# ignore .* files
+.*
