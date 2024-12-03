@@ -21,8 +21,8 @@ X_train = pd.read_csv(os.path.join(current_path, "./../../data_vecs.csv"))
 # zscores parameters
 params = pd.read_csv(os.path.join(current_path, "./../../precompute.csv"))
 # threshold
-threshold = -28524317292836.273
-threshold1 = -0.08908073589062888
+threshold = -244200212563196.38
+threshold1 = -0.22139926189558926
 
 import gensim.downloader as api
 model = api.load("word2vec-google-news-300")
