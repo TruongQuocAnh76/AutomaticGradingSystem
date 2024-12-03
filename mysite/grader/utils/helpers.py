@@ -28,25 +28,25 @@ def essay_to_sentences(essay_v, remove_stopwords):
 
 def makeFeatureVec(words, model, num_features):
     """Make Feature Vector from the words list of an Essay."""
-    featureVec = np.zeros((num_features,),dtype="float32")
-    num_words = 0.
-    index2word_set = set(model.wv.index_to_key)
-    for word in words:
-        if word in index2word_set:
-            num_words += 1
-            featureVec = np.add(featureVec,model.wv[word])        
-    featureVec = np.divide(featureVec,num_words)
-    return featureVec
-    # featureVec = np.zeros((num_features,), dtype="float32")
-    # nwords = 0
-    
+    # featureVec = np.zeros((num_features,),dtype="float32")
+    # num_words = 0.
+    # index2word_set = set(model.wv.index_to_key)
     # for word in words:
-    #     if word in model:
-    #         nwords += 1
-    #         featureVec = np.add(featureVec, model[word])
-            
-    # featureVec = np.divide(featureVec,nwords)
+    #     if word in index2word_set:
+    #         num_words += 1
+    #         featureVec = np.add(featureVec,model.wv[word])        
+    # featureVec = np.divide(featureVec,num_words)
     # return featureVec
+
+    featureVec = np.zeros((num_features,), dtype="float32")
+    nwords = 0
+    for word in words:
+        if word in model:
+            nwords += 1
+            featureVec = np.add(featureVec, model[word])
+            
+    featureVec = np.divide(featureVec,nwords)
+    return featureVec
 
 def getAvgFeatureVecs(essays, model, num_features):
     """Main function to generate the word vectors for word2vec model."""

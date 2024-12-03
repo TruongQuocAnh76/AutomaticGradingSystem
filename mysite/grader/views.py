@@ -13,15 +13,22 @@ current_path = os.path.abspath(os.path.dirname(__file__))
 
 # get precomputed rates from csv file
 import pandas as pd
+import joblib
+
 prompt_rates = np.array(pd.read_csv(os.path.join(current_path, "./../../prompt_vector.csv")))
 # training data
 X_train = pd.read_csv(os.path.join(current_path, "./../../data_vecs.csv"))
 # zscores parameters
 params = pd.read_csv(os.path.join(current_path, "./../../precompute.csv"))
 # threshold
-threshold = -75354.04
-threshold1 = -0.08908073955208601
+threshold = -28524317292836.273
+threshold1 = -0.08908073589062888
 
+import gensim.downloader as api
+model = api.load("word2vec-google-news-300")
+
+# scaler
+# scaler = joblib.load("./ss.pkl")
 # Create your views here.
 def index(request):
     questions_list = Question.objects.order_by('set')
@@ -48,11 +55,13 @@ def question(request, question_id):
 
             if len(content) > 20:
                 num_features = 300
-                model = Word2Vec.load(os.path.join(current_path, "deep_learning_files/word2vecmodel.model"))
+                # model = Word2Vec.load(os.path.join(current_path, "deep_learning_files/word2vecmodel.model"))
                 # model = Word2Vec.load(os.path.join(current_path, "./../../w2v_otd.model"))
                 clean_test_essays = []
                 clean_test_essays.append(essay_to_wordlist( content, remove_stopwords=True ))
                 testDataVecs = getAvgFeatureVecs( clean_test_essays, model, num_features )
+                # testDataVecs = scaler.transform(testDataVecs)
+
                 zscores = modelA(testDataVecs, prompt_rates[question_id - 1].reshape(1, -1), X_train, params.iloc[0, 0], params.iloc[0, 1], params.iloc[0, 2], params.iloc[0, 3])
                 if(zscores[0] > threshold and zscores[1] > threshold1):
                     testDataVecs = np.array(testDataVecs)
@@ -71,16 +80,7 @@ def question(request, question_id):
 
                 if preds < 0:
                     preds = 0
-                if preds > question.max_score:    # featureVec = np.zeros((num_features,), dtype="float32")
-    # nwords = 0
-    
-    # for word in words:
-    #     if word in model:
-    #         nwords += 1
-    #         featureVec = np.add(featureVec, model[word])
-            
-    # featureVec = np.divide(featureVec,nwords)
-    # return featureVec
+                if preds > question.max_score:
                     preds = question.max_score
             else:
                 preds = 0
